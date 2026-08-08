@@ -14,6 +14,17 @@ function App() {
   const [toasts, setToasts] = useState([])
   const messagesEndRef = useRef(null)
 
+  function formatDate(ts) {
+    if (!ts) return ''
+    const d = new Date(ts)
+    const dd = String(d.getDate()).padStart(2, '0')
+    const mm = String(d.getMonth() + 1).padStart(2, '0')
+    const yyyy = d.getFullYear()
+    const hh = String(d.getHours()).padStart(2, '0')
+    const min = String(d.getMinutes()).padStart(2, '0')
+    return `${dd}/${mm}/${yyyy} ${hh}:${min}`
+  }
+
   function pushToast(text) {
     const id = `${Date.now()}-${Math.random()}`
     setToasts((prev) => [...prev, { id, text }])
@@ -146,8 +157,11 @@ function App() {
               key={msg.id}
               className={`message ${msg.user === username ? 'own' : ''}`}
             >
-              <span className="message-user">{msg.user}</span>
-              <p className="message-text">{msg.text}</p>
+              <div className="message-bubble">
+                <span className="message-user">{msg.user}</span>
+                <p className="message-text">{msg.text}</p>
+              </div>
+              {msg.ts && <span className="message-date">{formatDate(msg.ts)}</span>}
             </li>
           ))}
           <div ref={messagesEndRef} />
